@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}Login - SmartCollege MS{% endblock %}
+
+{% block auth_content %}
+<div class="login-page">
+  <!-- Floating shapes -->
+  <div style="position:absolute;top:10%;left:10%;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.08);animation:float 6s ease-in-out infinite;"></div>
+  <div style="position:absolute;bottom:20%;right:15%;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.06);animation:float 8s ease-in-out infinite reverse;"></div>
+  <div style="position:absolute;top:50%;left:5%;width:60px;height:60px;border-radius:12px;background:rgba(255,255,255,0.1);animation:float 5s ease-in-out infinite;"></div>
+
+  <div class="login-card">
+    <div class="login-logo">🎓</div>
+    <h2 style="text-align:center;font-size:24px;font-weight:800;color:#1e293b;margin-bottom:4px;">Welcome Back</h2>
+    <p style="text-align:center;color:#64748b;font-size:14px;margin-bottom:28px;">Sign in to SmartCollege MS</p>
+
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <div style="position:relative;">
+          <i class="bi bi-person-fill" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;"></i>
+          {{ form.username }}
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="form-label">Password</label>
+        <div style="position:relative;">
+          <i class="bi bi-lock-fill" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;"></i>
+          {{ form.password }}
+          <button type="button" id="togglePass" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;">
+            <i class="bi bi-eye-fill"></i>
+          </button>
+        </div>
+      </div>
+      {% if form.errors %}
+      <div class="alert alert-danger" style="border-radius:10px;border:none;font-size:13px;">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>Invalid username or password.
+      </div>
+      {% endif %}
+      <button type="submit" class="btn-primary-custom w-100" style="justify-content:center;padding:12px;">
+        <i class="bi bi-box-arrow-in-right"></i> Sign In
+      </button>
+    </form>
+
+    <div style="text-align:center;margin-top:20px;">
+      <span style="color:#64748b;font-size:13px;">Don't have an account? </span>
+      <a href="{% url 'register' %}" style="color:#6366f1;font-weight:600;font-size:13px;text-decoration:none;">Create Account</a>
+    </div>
+
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
+      <p style="text-align:center;font-size:12px;color:#94a3b8;margin-bottom:12px;">Demo Accounts</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="fillLogin('admin','admin123')" style="padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:none;cursor:pointer;font-size:12px;color:#6366f1;font-weight:600;">👑 Admin</button>
+        <button onclick="fillLogin('teacher1','teacher123')" style="padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:none;cursor:pointer;font-size:12px;color:#06b6d4;font-weight:600;">👨‍🏫 Teacher</button>
+        <button onclick="fillLogin('student1','student123')" style="padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:none;cursor:pointer;font-size:12px;color:#10b981;font-weight:600;">🎓 Student</button>
+        <button onclick="fillLogin('principal1','principal123')" style="padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:none;cursor:pointer;font-size:12px;color:#f59e0b;font-weight:600;">🏫 Principal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.login-page input.form-control { padding-left: 42px; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+</style>
+
+<script>
+function fillLogin(user, pass) {
+  document.querySelector('[name="username"]').value = user;
+  document.querySelector('[name="password"]').value = pass;
+}
+document.getElementById('togglePass')?.addEventListener('click', function() {
+  const input = document.querySelector('[name="password"]');
+  const icon = this.querySelector('i');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.className = 'bi bi-eye-slash-fill';
+  } else {
+    input.type = 'password';
+    icon.className = 'bi bi-eye-fill';
+  }
+});
+</script>
+{% endblock %}

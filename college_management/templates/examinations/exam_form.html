@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% block title %}Create Exam{% endblock %}{% block page_title %}Create Exam{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card">
+  <div class="card-header-custom"><h5><i class="bi bi-journal-plus me-2" style="color:#6366f1;"></i>{{ title }}</h5><a href="{% url 'exam_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+  <div class="card-body-custom">
+    <form method="POST">{% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-8"><label class="form-label">Exam Name *</label>{{ form.name }}</div>
+        <div class="col-md-4"><label class="form-label">Type *</label>{{ form.exam_type }}</div>
+        <div class="col-md-6"><label class="form-label">Course *</label>{{ form.course }}</div>
+        <div class="col-md-6"><label class="form-label">Semester *</label>{{ form.semester }}</div>
+        <div class="col-md-4"><label class="form-label">Exam Date *</label>{{ form.exam_date }}</div>
+        <div class="col-md-4"><label class="form-label">Total Marks</label>{{ form.total_marks }}</div>
+        <div class="col-md-4"><label class="form-label">Passing Marks</label>{{ form.passing_marks }}</div>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:12px;">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Create Exam</button>
+        <a href="{% url 'exam_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div></div>{% endblock %}

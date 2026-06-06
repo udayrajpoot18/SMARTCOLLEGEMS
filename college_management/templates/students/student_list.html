@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Students - SmartCollege MS{% endblock %}
+{% block page_title %}Student Management{% endblock %}
+{% block breadcrumb %}<a href="{% url 'dashboard' %}">Home</a> <span class="separator">/</span> Students{% endblock %}
+
+{% block content %}
+<!-- Toolbar -->
+<div class="content-card mb-4">
+  <div class="card-body-custom" style="padding:16px 24px;">
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <form method="GET" style="display:flex;gap:12px;flex:1;flex-wrap:wrap;align-items:center;">
+        <div class="search-box" style="flex:1;min-width:200px;">
+          <i class="bi bi-search"></i>
+          <input type="text" name="q" class="form-control" placeholder="Search students..." value="{{ query }}">
+        </div>
+        <select name="dept" class="form-select" style="width:180px;">
+          <option value="">All Departments</option>
+          {% for d in departments %}<option value="{{ d.id }}" {% if dept_filter == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}
+        </select>
+        <select name="sem" class="form-select" style="width:140px;">
+          <option value="">All Semesters</option>
+          {% for i in "12345678"|make_list %}<option value="{{ i }}" {% if sem_filter == i %}selected{% endif %}>Semester {{ i }}</option>{% endfor %}
+        </select>
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-funnel-fill"></i> Filter</button>
+        <a href="{% url 'student_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Clear</a>
+      </form>
+      <div style="display:flex;gap:8px;">
+        <a href="{% url 'student_promote' %}" class="btn-outline-custom"><i class="bi bi-arrow-up-circle-fill"></i> Promote</a>
+        <a href="{% url 'student_add' %}" class="btn-primary-custom"><i class="bi bi-person-plus-fill"></i> Add Student</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6">
+    <div class="stat-card card-primary">
+      <div class="stat-icon bg-primary"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total Students</div>
+    </div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="content-card">
+  <div class="card-header-custom">
+    <h5><i class="bi bi-table me-2" style="color:#6366f1;"></i>Students ({{ total }})</h5>
+    <span class="badge-pill badge-primary">Page {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="table-custom">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Student</th>
+          <th>Enrollment</th>
+          <th>Department</th>
+          <th>Semester</th>
+          <th>Contact</th>
+          <th>Attendance</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in page_obj %}
+        <tr>
+          <td style="color:var(--text-secondary);font-size:12px;">{{ forloop.counter }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:12px;">
+              {% if student.photo %}
+                <img src="{{ student.photo.url }}" class="avatar avatar-md" alt="">
+              {% else %}
+                <div class="avatar avatar-md" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                  {{ student.first_name|first }}{{ student.last_name|first }}
+                </div>
+              {% endif %}
+              <div>
+                <div style="font-weight:600;font-size:14px;">{{ student.get_full_name }}</div>
+                <div style="font-size:12px;color:var(--text-secondary);">{{ student.email }}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge-pill badge-primary">{{ student.enrollment_number }}</span></td>
+          <td>{{ student.department.name }}</td>
+          <td><span class="badge-pill badge-info">Sem {{ student.semester }}</span></td>
+          <td style="font-size:13px;">{{ student.phone }}</td>
+          <td>
+            {% with pct=student.get_attendance_percentage %}
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div class="progress-custom" style="width:70px;">
+                <div class="progress-bar-custom" style="width:{{ pct }}%;{% if pct < 75 %}background:var(--gradient-2);{% endif %}"></div>
+              </div>
+              <span style="font-size:12px;font-weight:600;{% if pct < 75 %}color:#ef4444;{% else %}color:#10b981;{% endif %}">{{ pct }}%</span>
+            </div>
+            {% endwith %}
+          </td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              <a href="{% url 'student_detail' student.pk %}" class="topbar-btn" title="View" style="color:#6366f1;"><i class="bi bi-eye-fill"></i></a>
+              <a href="{% url 'student_edit' student.pk %}" class="topbar-btn" title="Edit" style="color:#f59e0b;"><i class="bi bi-pencil-fill"></i></a>
+              <a href="{% url 'student_id_card' student.pk %}" class="topbar-btn" title="ID Card" style="color:#10b981;"><i class="bi bi-credit-card-2-front-fill"></i></a>
+              <a href="{% url 'student_delete' student.pk %}" class="topbar-btn" title="Delete" style="color:#ef4444;"
+                 data-confirm="Deactivate {{ student.get_full_name }}?"><i class="bi bi-trash-fill"></i></a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" style="text-align:center;padding:48px;color:var(--text-secondary);">
+            <i class="bi bi-people" style="font-size:40px;opacity:0.3;display:block;margin-bottom:8px;"></i>
+            No students found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+  <div style="padding:16px 24px;border-top:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:13px;color:var(--text-secondary);">Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
+    <div class="pagination-custom">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&dept={{ dept_filter }}&sem={{ sem_filter }}" class="page-btn"><i class="bi bi-chevron-left"></i></a>
+      {% endif %}
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <span class="page-btn active">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a href="?page={{ num }}&q={{ query }}&dept={{ dept_filter }}&sem={{ sem_filter }}" class="page-btn">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&q={{ query }}&dept={{ dept_filter }}&sem={{ sem_filter }}" class="page-btn"><i class="bi bi-chevron-right"></i></a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

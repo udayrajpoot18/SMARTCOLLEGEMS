@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block title %}Post Notice{% endblock %}{% block page_title %}Post Notice{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card"><div class="card-header-custom"><h5><i class="bi bi-megaphone-fill me-2" style="color:#6366f1;"></i>Post Notice</h5><a href="{% url 'notice_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+<div class="card-body-custom"><form method="POST" enctype="multipart/form-data">{% csrf_token %}
+<div class="row g-3">
+  <div class="col-12"><label class="form-label">Title *</label>{{ form.title }}</div>
+  <div class="col-md-6"><label class="form-label">Target Audience</label>{{ form.target }}</div>
+  <div class="col-md-6"><label class="form-label">Priority</label>{{ form.priority }}</div>
+  <div class="col-12"><label class="form-label">Content *</label>{{ form.content }}</div>
+  <div class="col-md-6"><label class="form-label">Attachment</label>{{ form.attachment }}</div>
+  <div class="col-md-6"><label class="form-label">Expires At</label>{{ form.expires_at }}</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:12px;">
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-send-fill"></i> Post Notice</button>
+  <a href="{% url 'notice_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+</div>
+</form></div></div>
+</div></div>{% endblock %}

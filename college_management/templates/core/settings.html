@@ -1,0 +1,108 @@
+{% extends 'base.html' %}{% block title %}System Settings{% endblock %}{% block page_title %}System Settings{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <!-- Departments -->
+  <div class="col-lg-6">
+    <div class="content-card">
+      <div class="card-header-custom"><h5><i class="bi bi-diagram-3-fill me-2" style="color:#6366f1;"></i>Departments ({{ departments.count }})</h5></div>
+      <div style="overflow-x:auto;">
+        <table class="table-custom">
+          <thead><tr><th>Code</th><th>Name</th><th>HOD</th></tr></thead>
+          <tbody>
+            {% for d in departments %}
+            <tr><td><span class="badge-pill badge-primary">{{ d.code }}</span></td><td style="font-weight:600;">{{ d.name }}</td><td style="font-size:13px;color:var(--text-secondary);">{{ d.hod.get_full_name|default:"Not Assigned" }}</td></tr>
+            {% empty %}
+            <tr><td colspan="3" style="text-align:center;padding:24px;color:var(--text-secondary);">No departments</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:16px 20px;border-top:1px solid var(--glass-border);">
+        <button onclick="document.getElementById('deptModal').style.display='flex'" class="btn-primary-custom" style="width:100%;justify-content:center;"><i class="bi bi-plus-circle-fill"></i> Add Department</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="col-lg-6">
+    <div class="content-card">
+      <div class="card-header-custom"><h5><i class="bi bi-book-fill me-2" style="color:#8b5cf6;"></i>Courses ({{ courses.count }})</h5></div>
+      <div style="overflow-x:auto;">
+        <table class="table-custom">
+          <thead><tr><th>Code</th><th>Name</th><th>Dept</th><th>Sem</th></tr></thead>
+          <tbody>
+            {% for c in courses %}
+            <tr><td><span class="badge-pill badge-secondary">{{ c.code }}</span></td><td style="font-weight:600;font-size:13px;">{{ c.name }}</td><td style="font-size:12px;color:var(--text-secondary);">{{ c.department.code }}</td><td><span class="badge-pill badge-info">{{ c.semester }}</span></td></tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--text-secondary);">No courses</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="padding:16px 20px;border-top:1px solid var(--glass-border);">
+        <button onclick="document.getElementById('courseModal').style.display='flex'" class="btn-primary-custom" style="width:100%;justify-content:center;background:linear-gradient(135deg,#8b5cf6,#6366f1);"><i class="bi bi-plus-circle-fill"></i> Add Course</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dept Modal -->
+<div id="deptModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card-bg);border-radius:20px;padding:32px;width:90%;max-width:500px;box-shadow:var(--shadow-lg);">
+    <h5 style="font-weight:700;margin-bottom:20px;"><i class="bi bi-diagram-3-fill me-2" style="color:#6366f1;"></i>Add Department</h5>
+    <form method="POST" action="">{% csrf_token %}<input type="hidden" name="form_type" value="department">
+      <div class="row g-3">
+        <div class="col-md-8"><label class="form-label">Name *</label>{{ dept_form.name }}</div>
+        <div class="col-md-4"><label class="form-label">Code *</label>{{ dept_form.code }}</div>
+        <div class="col-12"><label class="form-label">HOD</label>{{ dept_form.hod }}</div>
+        <div class="col-md-6"><label class="form-label">Description</label>{{ dept_form.description }}</div>
+        <div class="col-md-6"><label class="form-label">Est. Year</label>{{ dept_form.established_year }}</div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Add Department</button>
+        <button type="button" onclick="document.getElementById('deptModal').style.display='none'" class="btn-outline-custom">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Course Modal -->
+<div id="courseModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9000;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--card-bg);border-radius:20px;padding:32px;width:90%;max-width:500px;box-shadow:var(--shadow-lg);">
+    <h5 style="font-weight:700;margin-bottom:20px;"><i class="bi bi-book-fill me-2" style="color:#8b5cf6;"></i>Add Course</h5>
+    <form method="POST" action="">{% csrf_token %}<input type="hidden" name="form_type" value="course">
+      <div class="row g-3">
+        <div class="col-md-8"><label class="form-label">Course Name *</label>{{ course_form.name }}</div>
+        <div class="col-md-4"><label class="form-label">Code *</label>{{ course_form.code }}</div>
+        <div class="col-md-6"><label class="form-label">Department *</label>{{ course_form.department }}</div>
+        <div class="col-md-3"><label class="form-label">Credits</label>{{ course_form.credits }}</div>
+        <div class="col-md-3"><label class="form-label">Semester</label>{{ course_form.semester }}</div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn-primary-custom" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);"><i class="bi bi-check-circle-fill"></i> Add Course</button>
+        <button type="button" onclick="document.getElementById('courseModal').style.display='none'" class="btn-outline-custom">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Handle form submissions for settings
+document.querySelectorAll('form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    const formType = form.querySelector('[name="form_type"]');
+    if (!formType) return;
+    e.preventDefault();
+    const data = new FormData(form);
+    fetch(window.location.href, { method: 'POST', body: data })
+      .then(r => r.json())
+      .then(res => {
+        if (res.success) { showToast(res.message, 'success'); setTimeout(() => location.reload(), 1000); }
+        else showToast(res.message || 'Error occurred', 'danger');
+      }).catch(() => { form.submit(); });
+  });
+});
+</script>
+{% endblock %}

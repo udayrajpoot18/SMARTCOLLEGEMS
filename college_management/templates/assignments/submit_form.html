@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}Submit Assignment{% endblock %}{% block page_title %}Submit Assignment{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card">
+  <div class="card-header-custom"><h5><i class="bi bi-upload me-2" style="color:#6366f1;"></i>Submit: {{ assignment.title }}</h5><a href="{% url 'assignment_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+  <div class="card-body-custom">
+    <div style="background:rgba(99,102,241,0.06);border-radius:12px;padding:16px;margin-bottom:20px;">
+      <p style="margin:0;font-size:14px;color:var(--text-secondary);">Course: <strong>{{ assignment.course.code }}</strong> &bull; Due: <strong>{{ assignment.deadline|date:"M d, Y H:i" }}</strong> &bull; Marks: <strong>{{ assignment.total_marks }}</strong></p>
+    </div>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+      <div class="row g-3">
+        <div class="col-12"><label class="form-label">Student *</label>{{ form.student }}</div>
+        <div class="col-12"><label class="form-label">Upload File (PDF, DOC, ZIP...)</label>{{ form.file }}</div>
+        <div class="col-12"><label class="form-label">Or Write Response</label>{{ form.text_response }}</div>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:12px;">
+        <button type="submit" class="btn-primary-custom"><i class="bi bi-send-fill"></i> Submit Assignment</button>
+        <a href="{% url 'assignment_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div></div>{% endblock %}

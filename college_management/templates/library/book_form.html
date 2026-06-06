@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block title %}Add Book{% endblock %}{% block page_title %}Add Book{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card"><div class="card-header-custom"><h5><i class="bi bi-book-fill me-2" style="color:#6366f1;"></i>Add Book</h5><a href="{% url 'book_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+<div class="card-body-custom"><form method="POST">{% csrf_token %}
+<div class="row g-3">
+  <div class="col-md-8"><label class="form-label">Book Title *</label>{{ form.title }}</div>
+  <div class="col-md-4"><label class="form-label">Category *</label>{{ form.category }}</div>
+  <div class="col-md-6"><label class="form-label">Author *</label>{{ form.author }}</div>
+  <div class="col-md-6"><label class="form-label">ISBN *</label>{{ form.isbn }}</div>
+  <div class="col-md-6"><label class="form-label">Publisher</label>{{ form.publisher }}</div>
+  <div class="col-md-3"><label class="form-label">Publication Year</label>{{ form.publication_year }}</div>
+  <div class="col-md-3"><label class="form-label">Rack Number</label>{{ form.rack_number }}</div>
+  <div class="col-md-6"><label class="form-label">Total Copies *</label>{{ form.total_copies }}</div>
+  <div class="col-md-6"><label class="form-label">Available Copies *</label>{{ form.available_copies }}</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:12px;">
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Add Book</button>
+  <a href="{% url 'book_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+</div>
+</form></div></div>
+</div></div>{% endblock %}

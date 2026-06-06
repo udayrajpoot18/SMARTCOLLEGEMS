@@ -1,0 +1,37 @@
+{% extends 'base.html' %}{% block title %}Student Results - {{ student.get_full_name }}{% endblock %}{% block page_title %}Student Results{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card card-primary"><div class="stat-icon bg-primary"><i class="bi bi-journals"></i></div><div class="stat-value">{{ results.count }}</div><div class="stat-label">Total Exams</div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card card-warning"><div class="stat-icon bg-warning"><i class="bi bi-star-fill"></i></div><div class="stat-value">{{ avg_gpa }}</div><div class="stat-label">CGPA</div></div>
+  </div>
+</div>
+<div class="content-card">
+  <div class="card-header-custom">
+    <h5><i class="bi bi-trophy-fill me-2" style="color:#f59e0b;"></i>{{ student.get_full_name }} - All Results</h5>
+    <span class="badge-pill badge-primary">CGPA: {{ avg_gpa }}</span>
+  </div>
+  <div style="overflow-x:auto;">
+    <table class="table-custom">
+      <thead><tr><th>Exam</th><th>Course</th><th>Type</th><th>Marks</th><th>%</th><th>Grade</th><th>Points</th></tr></thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td style="font-weight:600;font-size:14px;">{{ r.exam.name }}</td>
+          <td style="font-size:13px;color:var(--text-secondary);">{{ r.exam.course.code }}</td>
+          <td><span class="badge-pill badge-info">{{ r.exam.get_exam_type_display }}</span></td>
+          <td>{{ r.marks_obtained }} / {{ r.exam.total_marks }}</td>
+          <td style="font-weight:600;">{% widthratio r.marks_obtained r.exam.total_marks 100 %}%</td>
+          <td><span class="badge-pill {% if r.grade == 'F' %}badge-danger{% elif r.grade in 'O' %}badge-success{% else %}badge-primary{% endif %}">{{ r.grade }}</span></td>
+          <td style="font-weight:800;color:#6366f1;font-size:16px;">{{ r.grade_points }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-secondary);">No results found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

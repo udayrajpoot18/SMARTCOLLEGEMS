@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% block title %}Notice Board{% endblock %}{% block page_title %}Notice Board{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+  <div></div>
+  <a href="{% url 'notice_add' %}" class="btn-primary-custom"><i class="bi bi-plus-circle-fill"></i> Post Notice</a>
+</div>
+<div class="row g-3">
+  {% for notice in notices %}
+  <div class="col-lg-6">
+    <div class="notice-card {{ notice.priority }}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+        <h6 style="font-weight:700;font-size:15px;margin:0;flex:1;margin-right:12px;">{{ notice.title }}</h6>
+        <div style="display:flex;gap:6px;flex-shrink:0;">
+          <span class="badge-pill {% if notice.priority == 'urgent' %}badge-danger{% elif notice.priority == 'high' %}badge-warning{% else %}badge-info{% endif %}">{{ notice.get_priority_display }}</span>
+          <span class="badge-pill badge-secondary">{{ notice.get_target_display }}</span>
+        </div>
+      </div>
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:8px;">{{ notice.content|truncatechars:120 }}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:#94a3b8;"><i class="bi bi-clock me-1"></i>{{ notice.created_at|timesince }} ago &bull; {{ notice.created_by.get_full_name }}</span>
+        <a href="{% url 'notice_detail' notice.pk %}" class="badge-pill badge-primary" style="text-decoration:none;">Read More</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12" style="text-align:center;padding:48px;color:var(--text-secondary);">
+    <i class="bi bi-megaphone" style="font-size:48px;opacity:0.3;display:block;margin-bottom:8px;"></i>
+    No notices posted yet.
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

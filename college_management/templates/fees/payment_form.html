@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% block title %}Record Payment{% endblock %}{% block page_title %}Record Fee Payment{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card">
+  <div class="card-header-custom"><h5><i class="bi bi-currency-rupee me-2" style="color:#10b981;"></i>Record Payment</h5><a href="{% url 'fee_dashboard' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+  <div class="card-body-custom">
+    <form method="POST">{% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6"><label class="form-label">Student *</label>{{ form.student }}</div>
+        <div class="col-md-6"><label class="form-label">Fee Structure</label>{{ form.fee_structure }}</div>
+        <div class="col-md-4"><label class="form-label">Amount Paid (₹) *</label>{{ form.amount_paid }}</div>
+        <div class="col-md-4"><label class="form-label">Payment Date *</label>{{ form.payment_date }}</div>
+        <div class="col-md-4"><label class="form-label">Payment Method *</label>{{ form.payment_method }}</div>
+        <div class="col-md-6"><label class="form-label">Status *</label>{{ form.status }}</div>
+        <div class="col-md-6"><label class="form-label">Remarks</label>{{ form.remarks }}</div>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:12px;">
+        <button type="submit" class="btn-primary-custom" style="background:linear-gradient(135deg,#10b981,#059669);"><i class="bi bi-check-circle-fill"></i> Record Payment</button>
+        <a href="{% url 'fee_dashboard' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div></div>{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}{% block title %}Examinations{% endblock %}{% block page_title %}Examinations{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+  <div></div>
+  <div style="display:flex;gap:8px;">
+    <a href="{% url 'result_list' %}" class="btn-outline-custom"><i class="bi bi-list-check"></i> View Results</a>
+    {% if request.user.role in 'super_admin,principal,teacher' %}
+    <a href="{% url 'exam_add' %}" class="btn-primary-custom"><i class="bi bi-journal-plus"></i> Create Exam</a>
+    {% endif %}
+  </div>
+</div>
+<div class="content-card">
+  <div class="card-header-custom"><h5><i class="bi bi-journal-richtext me-2" style="color:#6366f1;"></i>All Exams</h5></div>
+  <div style="overflow-x:auto;">
+    <table class="table-custom">
+      <thead><tr><th>#</th><th>Exam Name</th><th>Course</th><th>Type</th><th>Date</th><th>Total Marks</th><th>Semester</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for exam in exams %}
+        <tr>
+          <td style="font-size:12px;color:var(--text-secondary);">{{ forloop.counter }}</td>
+          <td style="font-weight:600;">{{ exam.name }}</td>
+          <td style="font-size:13px;color:var(--text-secondary);">{{ exam.course.code }} - {{ exam.course.name }}</td>
+          <td><span class="badge-pill badge-info">{{ exam.get_exam_type_display }}</span></td>
+          <td>{{ exam.exam_date|date:"M d, Y" }}</td>
+          <td style="font-weight:600;">{{ exam.total_marks }}</td>
+          <td><span class="badge-pill badge-primary">Sem {{ exam.semester }}</span></td>
+          <td>
+            <div style="display:flex;gap:6px;">
+              {% if request.user.role in 'super_admin,principal,teacher' %}
+              <a href="{% url 'enter_marks' exam.pk %}" class="topbar-btn" title="Enter Marks" style="color:#6366f1;"><i class="bi bi-pencil-square"></i></a>
+              {% else %}
+              <span style="font-size:12px;color:var(--text-secondary);">View Only</span>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" style="text-align:center;padding:48px;color:var(--text-secondary);"><i class="bi bi-journal-x" style="font-size:40px;opacity:0.3;display:block;margin-bottom:8px;"></i>No exams created yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

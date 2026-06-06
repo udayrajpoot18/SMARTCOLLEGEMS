@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}Take Attendance{% endblock %}
+{% block page_title %}Take Attendance{% endblock %}
+{% block content %}
+<div class="content-card mb-4">
+  <div class="card-header-custom"><h5><i class="bi bi-calendar2-plus-fill me-2" style="color:#6366f1;"></i>Select Course & Date</h5></div>
+  <div class="card-body-custom">
+    <div class="row g-3">
+      <div class="col-md-5">
+        <label class="form-label">Course</label>
+        <select id="courseSelect" class="form-select">
+          <option value="">-- Select Course --</option>
+          {% for c in courses %}<option value="{{ c.id }}">{{ c.code }} - {{ c.name }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Date</label>
+        <input type="date" id="attendanceDate" class="form-control" value="{{ today|date:'Y-m-d' }}">
+      </div>
+      <div class="col-md-4" style="display:flex;align-items:flex-end;">
+        <button onclick="loadStudents()" class="btn-primary-custom"><i class="bi bi-people-fill"></i> Load Students</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="attendanceForm" style="display:none;">
+  <div class="content-card">
+    <div class="card-header-custom">
+      <h5 id="formTitle"><i class="bi bi-list-check me-2" style="color:#6366f1;"></i>Mark Attendance</h5>
+      <div style="display:flex;gap:8px;">
+        <button onclick="markAll('present')" class="btn-primary-custom" style="padding:6px 14px;font-size:13px;background:var(--gradient-4);"><i class="bi bi-check-all"></i> All Present</button>
+        <button onclick="markAll('absent')" class="btn-primary-custom" style="padding:6px 14px;font-size:13px;background:var(--gradient-2);"><i class="bi bi-x-square"></i> All Absent</button>
+      </div>
+    </div>
+    <div class="card-body-custom">
+      <form id="bulkAttendanceForm" method="POST" action="{% url 'take_attendance' %}">
+        {% csrf_token %}
+        <input type="hidden" name="course" id="hiddenCourse">
+        <input type="hidden" name="date" id="hiddenDate">
+        <div class="row g-2" id="studentGrid"></div>
+        <div style="margin-top:20px;">
+          <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Save Attendance</button>
+          <a href="{% url 'attendance_dashboard' %}" class="btn-outline-custom ms-2"><i class="bi bi-x-circle"></i> Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function loadStudents() {
+  const courseId = document.getElementById('courseSelect').value;
+  const date = document.getElementById('attendanceDate').value;
+  if (!courseId) { alert('Please select a course'); return; }
+  fetch(`{% url 'get_students_for_course' %}?course_id=${courseId}`)
+    .then(r => r.json())
+    .then(data => {
+      const grid = document.getElementById('studentGrid');
+      grid.innerHTML = '';
+      document.getElementById('hiddenCourse').value = courseId;
+      document.getElementById('hiddenDate').value = date;
+      document.getElementById('formTitle').innerHTML = `<i class="bi bi-list-check me-2" style="color:#6366f1;"></i>Mark Attendance (${data.students.length} students)`;
+      data.students.forEach(s => {
+        grid.innerHTML += `
+          <div class="col-xl-3 col-md-4 col-6">
+            <div class="student-att-card" data-id="${s.id}" style="border:2px solid rgba(99,102,241,0.15);border-radius:12px;padding:14px;cursor:pointer;transition:all 0.2s;" onclick="toggleStatus(${s.id})">
+              <input type="hidden" name="status_${s.id}" id="status_${s.id}" value="present">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="avatar avatar-sm" style="background:linear-gradient(135deg,#667eea,#764ba2);">${s.first_name[0]}${s.last_name[0]}</div>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:600;">${s.first_name} ${s.last_name}</div>
+                  <div style="font-size:11px;color:#94a3b8;">${s.enrollment_number}</div>
+                </div>
+                <div id="badge_${s.id}" class="badge-pill badge-success">P</div>
+              </div>
+            </div>
+          </div>`;
+      });
+      document.getElementById('attendanceForm').style.display = 'block';
+    });
+}
+
+function toggleStatus(id) {
+  const input = document.getElementById(`status_${id}`);
+  const badge = document.getElementById(`badge_${id}`);
+  const card = document.querySelector(`[data-id="${id}"]`);
+  if (input.value === 'present') {
+    input.value = 'absent';
+    badge.className = 'badge-pill badge-danger';
+    badge.textContent = 'A';
+    card.style.borderColor = 'rgba(239,68,68,0.4)';
+    card.style.background = 'rgba(239,68,68,0.04)';
+  } else {
+    input.value = 'present';
+    badge.className = 'badge-pill badge-success';
+    badge.textContent = 'P';
+    card.style.borderColor = 'rgba(99,102,241,0.15)';
+    card.style.background = '';
+  }
+}
+
+function markAll(status) {
+  document.querySelectorAll('[data-id]').forEach(card => {
+    const id = card.getAttribute('data-id');
+    const input = document.getElementById(`status_${id}`);
+    const badge = document.getElementById(`badge_${id}`);
+    input.value = status;
+    if (status === 'present') {
+      badge.className = 'badge-pill badge-success'; badge.textContent = 'P';
+      card.style.borderColor = 'rgba(99,102,241,0.15)'; card.style.background = '';
+    } else {
+      badge.className = 'badge-pill badge-danger'; badge.textContent = 'A';
+      card.style.borderColor = 'rgba(239,68,68,0.4)'; card.style.background = 'rgba(239,68,68,0.04)';
+    }
+  });
+}
+</script>
+{% endblock %}

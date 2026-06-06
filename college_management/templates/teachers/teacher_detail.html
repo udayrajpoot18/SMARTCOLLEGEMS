@@ -1,0 +1,39 @@
+{% extends 'base.html' %}{% block title %}{{ teacher.get_full_name }}{% endblock %}{% block page_title %}Teacher Profile{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="profile-card text-center mb-3" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">
+      {% if teacher.photo %}<img src="{{ teacher.photo.url }}" style="width:90px;height:90px;border-radius:18px;object-fit:cover;margin-bottom:12px;border:3px solid rgba(255,255,255,0.5);">
+      {% else %}<div class="avatar avatar-xl" style="background:rgba(255,255,255,0.2);margin:0 auto 12px;">{{ teacher.first_name|first }}{{ teacher.last_name|first }}</div>{% endif %}
+      <h4 style="font-weight:800;font-size:20px;margin-bottom:4px;">{{ teacher.get_full_name }}</h4>
+      <p style="opacity:0.8;font-size:13px;margin-bottom:4px;">{{ teacher.get_designation_display }}</p>
+      <p style="opacity:0.7;font-size:12px;">{{ teacher.employee_id }}</p>
+      <span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;">{{ teacher.department.name }}</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <a href="{% url 'teacher_edit' teacher.pk %}" class="btn-primary-custom" style="flex:1;justify-content:center;background:linear-gradient(135deg,#06b6d4,#0284c7);"><i class="bi bi-pencil-fill"></i> Edit</a>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="content-card">
+      <div class="card-header-custom"><h5><i class="bi bi-person-lines-fill me-2" style="color:#06b6d4;"></i>Teacher Information</h5></div>
+      <div class="card-body-custom">
+        <div class="row g-3">
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Email</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.email }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Phone</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.phone }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Qualification</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.qualification }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Experience</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.experience_years }} Years</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Joining Date</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.joining_date|date:"M d, Y" }}</p></div>
+          <div class="col-12"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Specialization</label><p style="font-size:14px;font-weight:500;margin:0;">{{ teacher.specialization|default:"N/A" }}</p></div>
+          <div class="col-12">
+            <label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Subjects</label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;">
+              {% for s in teacher.subjects.all %}<span class="badge-pill badge-info">{{ s.code }}</span>{% empty %}<span style="color:var(--text-secondary);font-size:13px;">No subjects assigned</span>{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

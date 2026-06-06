@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - SmartCollege MS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block breadcrumb %}<a href="{% url 'dashboard' %}">Home</a> <span class="separator">/</span> <a href="{% url 'student_list' %}">Students</a> <span class="separator">/</span> {{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <div class="content-card">
+      <div class="card-header-custom">
+        <h5><i class="bi bi-person-plus-fill me-2" style="color:#6366f1;"></i>{{ title }}</h5>
+        <a href="{% url 'student_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a>
+      </div>
+      <div class="card-body-custom">
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">First Name *</label>{{ form.first_name }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Name *</label>{{ form.last_name }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Enrollment Number *</label>{{ form.enrollment_number }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Email *</label>{{ form.email }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Phone *</label>{{ form.phone }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Gender *</label>{{ form.gender }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Date of Birth *</label>{{ form.date_of_birth }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Blood Group</label>{{ form.blood_group }}
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Admission Date *</label>{{ form.admission_date }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Department *</label>{{ form.department }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Semester *</label>{{ form.semester }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Address *</label>{{ form.address }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Parent/Guardian Name *</label>{{ form.parent_name }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Parent Phone *</label>{{ form.parent_phone }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Parent Email</label>{{ form.parent_email }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Profile Photo</label>{{ form.photo }}
+            </div>
+          </div>
+          {% if form.errors %}
+          <div class="alert alert-danger mt-3" style="border-radius:10px;border:none;font-size:13px;">
+            {% for field in form %}{% for e in field.errors %}<div><b>{{ field.label }}:</b> {{ e }}</div>{% endfor %}{% endfor %}
+          </div>
+          {% endif %}
+          <div style="margin-top:24px;display:flex;gap:12px;">
+            <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Save Student</button>
+            <a href="{% url 'student_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

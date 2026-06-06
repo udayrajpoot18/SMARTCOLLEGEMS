@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% block title %}Study Materials{% endblock %}{% block page_title %}Study Materials{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+  <div></div>
+  <a href="{% url 'material_upload' %}" class="btn-primary-custom"><i class="bi bi-cloud-upload-fill"></i> Upload Material</a>
+</div>
+<div class="row g-3">
+  {% for m in materials %}
+  <div class="col-xl-3 col-md-4 col-sm-6">
+    <div class="content-card" style="padding:20px;">
+      <div style="font-size:40px;margin-bottom:12px;text-align:center;">
+        {% if m.material_type == 'pdf' %}📄{% elif m.material_type == 'ppt' %}📊{% elif m.material_type == 'video' %}🎥{% elif m.material_type == 'notes' %}📝{% else %}📦{% endif %}
+      </div>
+      <h6 style="font-weight:700;font-size:14px;margin-bottom:4px;text-align:center;">{{ m.title }}</h6>
+      <p style="color:var(--text-secondary);font-size:12px;text-align:center;margin-bottom:8px;">{{ m.course.code }} &bull; {{ m.teacher.first_name }}</p>
+      <div style="text-align:center;margin-bottom:12px;"><span class="badge-pill badge-info">{{ m.get_material_type_display }}</span></div>
+      {% if m.description %}<p style="font-size:12px;color:var(--text-secondary);text-align:center;margin-bottom:12px;">{{ m.description|truncatechars:50 }}</p>{% endif %}
+      <div style="text-align:center;">
+        {% if m.file %}<a href="{{ m.file.url }}" download class="btn-primary-custom" style="justify-content:center;font-size:12px;padding:8px 16px;"><i class="bi bi-download"></i> Download</a>
+        {% elif m.video_url %}<a href="{{ m.video_url }}" target="_blank" class="btn-primary-custom" style="justify-content:center;font-size:12px;padding:8px 16px;background:var(--gradient-2);"><i class="bi bi-play-circle-fill"></i> Watch</a>{% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12" style="text-align:center;padding:48px;color:var(--text-secondary);">
+    <i class="bi bi-collection" style="font-size:48px;opacity:0.3;display:block;margin-bottom:8px;"></i>No study materials uploaded yet.
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% block title %}Issued Books{% endblock %}{% block page_title %}Issued Books{% endblock %}
+{% block content %}
+<div class="content-card">
+  <div class="card-header-custom"><h5><i class="bi bi-book-fill me-2" style="color:#6366f1;"></i>Currently Issued Books</h5></div>
+  <div style="overflow-x:auto;">
+    <table class="table-custom">
+      <thead><tr><th>Book</th><th>Student</th><th>Student ID</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for issue in issues %}
+        <tr>
+          <td><div style="font-weight:600;font-size:14px;">{{ issue.book.title }}</div><div style="font-size:12px;color:var(--text-secondary);">by {{ issue.book.author }}</div></td>
+          <td style="font-weight:600;font-size:14px;">{{ issue.student_name }}</td>
+          <td><span class="badge-pill badge-primary">{{ issue.student_id }}</span></td>
+          <td style="font-size:13px;">{{ issue.issue_date|date:"M d, Y" }}</td>
+          <td style="font-size:13px;{% if issue.due_date < today %}color:#ef4444;font-weight:700;{% endif %}">{{ issue.due_date|date:"M d, Y" }}</td>
+          <td><span class="badge-pill {% if issue.status == 'issued' %}badge-info{% elif issue.status == 'overdue' %}badge-danger{% else %}badge-success{% endif %}">{{ issue.get_status_display }}</span></td>
+          <td><a href="{% url 'return_book' issue.pk %}" class="topbar-btn" title="Return Book" style="color:#10b981;"><i class="bi bi-arrow-left-circle-fill"></i></a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" style="text-align:center;padding:48px;color:var(--text-secondary);">No books currently issued.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

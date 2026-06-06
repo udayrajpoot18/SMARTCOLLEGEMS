@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Dashboard{% endblock %}
+{% block page_title %}Attendance Management{% endblock %}
+{% block breadcrumb %}<a href="{% url 'dashboard' %}">Home</a> <span class="separator">/</span> Attendance{% endblock %}
+{% block content %}
+<!-- Stats -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6">
+    <div class="stat-card card-success">
+      <div class="stat-icon bg-success"><i class="bi bi-check-circle-fill"></i></div>
+      <div class="stat-value">{{ present }}</div>
+      <div class="stat-label">Present Today</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card card-danger">
+      <div class="stat-icon bg-danger"><i class="bi bi-x-circle-fill"></i></div>
+      <div class="stat-value">{{ absent }}</div>
+      <div class="stat-label">Absent Today</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card card-primary">
+      <div class="stat-icon bg-primary"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-label">Total Records</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-6">
+    <div class="stat-card card-info">
+      <div class="stat-icon bg-info"><i class="bi bi-percent"></i></div>
+      <div class="stat-value">{{ pct }}%</div>
+      <div class="stat-label">Today's Rate</div>
+      <div class="progress-custom" style="margin-top:10px;">
+        <div class="progress-bar-custom" style="width:{{ pct }}%;{% if pct < 75 %}background:var(--gradient-2);{% endif %}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-8">
+    <div class="content-card">
+      <div class="card-header-custom">
+        <h5><i class="bi bi-bar-chart-fill me-2" style="color:#6366f1;"></i>Last 7 Days Attendance</h5>
+      </div>
+      <div class="card-body-custom">
+        <div class="chart-container" style="height:200px;"><canvas id="weekChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="content-card h-100">
+      <div class="card-header-custom"><h5><i class="bi bi-lightning-fill me-2" style="color:#f59e0b;"></i>Quick Actions</h5></div>
+      <div class="card-body-custom" style="display:flex;flex-direction:column;gap:10px;">
+        <a href="{% url 'take_attendance' %}" class="btn-primary-custom" style="justify-content:center;"><i class="bi bi-calendar2-plus-fill"></i> Take Attendance</a>
+        <a href="{% url 'attendance_report' %}" class="btn-outline-custom" style="justify-content:center;"><i class="bi bi-file-earmark-bar-graph-fill"></i> View Reports</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+Chart.defaults.font.family = 'Inter';
+const data = {{ last_7_days|safe }};
+new Chart(document.getElementById('weekChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.date),
+    datasets: [{
+      label: 'Attendance %',
+      data: data.map(d => d.pct),
+      backgroundColor: data.map(d => d.pct >= 75 ? 'rgba(16,185,129,0.8)' : 'rgba(239,68,68,0.8)'),
+      borderRadius: 8,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { callback: v => v + '%' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
+{% endblock %}

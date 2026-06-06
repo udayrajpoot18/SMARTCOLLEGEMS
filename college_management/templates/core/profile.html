@@ -1,0 +1,33 @@
+{% extends 'base.html' %}{% block title %}My Profile{% endblock %}{% block page_title %}My Profile{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-4">
+    <div class="profile-card text-center mb-3">
+      {% if user.profile_photo %}<img src="{{ user.profile_photo.url }}" style="width:90px;height:90px;border-radius:18px;object-fit:cover;margin-bottom:12px;border:3px solid rgba(255,255,255,0.5);">
+      {% else %}<div class="avatar avatar-xl" style="background:rgba(255,255,255,0.2);margin:0 auto 12px;">{{ user.first_name|first|default:"U" }}{{ user.last_name|first|default:"" }}</div>{% endif %}
+      <h4 style="font-weight:800;font-size:20px;margin-bottom:4px;">{{ user.get_full_name|default:user.username }}</h4>
+      <p style="opacity:0.8;font-size:13px;margin-bottom:8px;">{{ user.email }}</p>
+      <span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 14px;font-size:12px;font-weight:600;">{{ user.get_role_display }}</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <a href="{% url 'profile_update' %}" class="btn-primary-custom" style="flex:1;justify-content:center;"><i class="bi bi-pencil-fill"></i> Edit Profile</a>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="content-card">
+      <div class="card-header-custom"><h5><i class="bi bi-person-lines-fill me-2" style="color:#6366f1;"></i>Profile Information</h5></div>
+      <div class="card-body-custom">
+        <div class="row g-3">
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Username</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.username }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Email</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.email }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Phone</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.phone|default:"Not set" }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Date of Birth</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.date_of_birth|date:"M d, Y"|default:"Not set" }}</p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Role</label><p style="margin:0;"><span class="badge-pill badge-{{ user.get_role_display_class }}">{{ user.get_role_display }}</span></p></div>
+          <div class="col-md-6"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Joined</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.date_joined|date:"M d, Y" }}</p></div>
+          {% if user.address %}<div class="col-12"><label style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Address</label><p style="font-size:14px;font-weight:500;margin:0;">{{ user.address }}</p></div>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

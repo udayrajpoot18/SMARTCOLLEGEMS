@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% block title %}Attendance - {{ student.get_full_name }}{% endblock %}{% block page_title %}Student Attendance{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-6"><div class="stat-card card-primary"><div class="stat-icon bg-primary"><i class="bi bi-calendar3"></i></div><div class="stat-value">{{ total }}</div><div class="stat-label">Total Classes</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card card-success"><div class="stat-icon bg-success"><i class="bi bi-check-circle-fill"></i></div><div class="stat-value">{{ present }}</div><div class="stat-label">Present</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card card-danger"><div class="stat-icon bg-danger"><i class="bi bi-x-circle-fill"></i></div><div class="stat-value">{{ total|add:-present }}</div><div class="stat-label">Absent</div></div></div>
+  <div class="col-md-3 col-6"><div class="stat-card card-info"><div class="stat-icon bg-info"><i class="bi bi-percent"></i></div><div class="stat-value">{{ pct }}%</div><div class="stat-label">Percentage</div></div></div>
+</div>
+<div class="content-card">
+  <div class="card-header-custom"><h5>{{ student.get_full_name }} - Attendance Records</h5></div>
+  <div style="overflow-x:auto;">
+    <table class="table-custom">
+      <thead><tr><th>Date</th><th>Course</th><th>Status</th><th>Remarks</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.date|date:"M d, Y" }}</td>
+          <td>{{ r.course.code }} - {{ r.course.name }}</td>
+          <td>
+            <span class="badge-pill {% if r.status == 'present' %}badge-success{% elif r.status == 'absent' %}badge-danger{% elif r.status == 'late' %}badge-warning{% else %}badge-info{% endif %}">{{ r.get_status_display }}</span>
+          </td>
+          <td style="font-size:13px;color:var(--text-secondary);">{{ r.remarks|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" style="text-align:center;padding:32px;color:var(--text-secondary);">No attendance records found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% block title %}Return Book{% endblock %}{% block page_title %}Return Book{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-md-5"><div class="content-card"><div class="card-body-custom text-center" style="padding:40px;">
+<div style="font-size:48px;margin-bottom:16px;">📚</div>
+<h4 style="font-weight:700;margin-bottom:8px;">Return Book</h4>
+<p style="color:var(--text-secondary);margin-bottom:4px;"><strong>{{ issue.book.title }}</strong></p>
+<p style="color:var(--text-secondary);margin-bottom:4px;">Issued to: <strong>{{ issue.student_name }}</strong></p>
+<p style="color:var(--text-secondary);margin-bottom:24px;">Due Date: <strong style="{% if issue.due_date < today %}color:#ef4444;{% endif %}">{{ issue.due_date|date:"M d, Y" }}</strong></p>
+{% if issue.due_date < today %}<div class="alert alert-warning" style="border-radius:10px;border:none;font-size:13px;">⚠ This book is overdue. Fine will be calculated automatically (₹2/day).</div>{% endif %}
+<form method="POST">{% csrf_token %}
+<button type="submit" class="btn-primary-custom" style="background:var(--gradient-4);">Confirm Return</button>
+<a href="{% url 'issued_books' %}" class="btn-outline-custom ms-2">Cancel</a>
+</form>
+</div></div></div></div>{% endblock %}

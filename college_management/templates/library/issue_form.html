@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% block title %}Issue Book{% endblock %}{% block page_title %}Issue Book{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card"><div class="card-header-custom"><h5><i class="bi bi-arrow-right-circle-fill me-2" style="color:#6366f1;"></i>Issue Book</h5><a href="{% url 'book_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+<div class="card-body-custom"><form method="POST">{% csrf_token %}
+<div class="row g-3">
+  <div class="col-12"><label class="form-label">Book *</label>{{ form.book }}</div>
+  <div class="col-md-6"><label class="form-label">Student Name *</label>{{ form.student_name }}</div>
+  <div class="col-md-6"><label class="form-label">Student ID/Enrollment *</label>{{ form.student_id }}</div>
+  <div class="col-md-6"><label class="form-label">Issue Date *</label>{{ form.issue_date }}</div>
+  <div class="col-md-6"><label class="form-label">Due Date *</label>{{ form.due_date }}</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:12px;">
+  <button type="submit" class="btn-primary-custom" style="background:var(--gradient-4);"><i class="bi bi-check-circle-fill"></i> Issue Book</button>
+  <a href="{% url 'book_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+</div>
+</form></div></div>
+</div></div>{% endblock %}

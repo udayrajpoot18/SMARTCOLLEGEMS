@@ -1,0 +1,19 @@
+{% extends 'base.html' %}{% block title %}Upload Material{% endblock %}{% block page_title %}Upload Study Material{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card"><div class="card-header-custom"><h5><i class="bi bi-cloud-upload-fill me-2" style="color:#6366f1;"></i>Upload Material</h5><a href="{% url 'material_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+<div class="card-body-custom"><form method="POST" enctype="multipart/form-data">{% csrf_token %}
+<div class="row g-3">
+  <div class="col-12"><label class="form-label">Title *</label>{{ form.title }}</div>
+  <div class="col-md-6"><label class="form-label">Course *</label>{{ form.course }}</div>
+  <div class="col-md-6"><label class="form-label">Teacher *</label>{{ form.teacher }}</div>
+  <div class="col-md-6"><label class="form-label">Material Type *</label>{{ form.material_type }}</div>
+  <div class="col-md-6"><label class="form-label">File (PDF/PPT/DOC)</label>{{ form.file }}</div>
+  <div class="col-12"><label class="form-label">Video URL (if video)</label>{{ form.video_url }}</div>
+  <div class="col-12"><label class="form-label">Description</label>{{ form.description }}</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:12px;">
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-cloud-upload-fill"></i> Upload Material</button>
+  <a href="{% url 'material_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+</div>
+</form></div></div>
+</div></div>{% endblock %}

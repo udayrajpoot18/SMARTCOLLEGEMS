@@ -1,0 +1,43 @@
+{% extends 'base.html' %}{% block title %}Fee Receipt{% endblock %}{% block page_title %}Fee Receipt{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="content-card" id="receipt">
+      <div style="padding:32px;text-align:center;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:var(--border-radius) var(--border-radius) 0 0;color:white;">
+        <div style="font-size:32px;margin-bottom:8px;">🎓</div>
+        <h3 style="font-weight:800;margin-bottom:2px;">Smart College Management System</h3>
+        <p style="opacity:0.8;font-size:14px;margin:0;">Fee Receipt</p>
+      </div>
+      <div style="padding:32px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+          <div><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Transaction ID</div><div style="font-size:18px;font-weight:800;color:#6366f1;">{{ payment.transaction_id }}</div></div>
+          <div style="text-align:right;"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Date</div><div style="font-size:15px;font-weight:600;">{{ payment.payment_date|date:"M d, Y" }}</div></div>
+        </div>
+        <div style="background:rgba(99,102,241,0.06);border-radius:12px;padding:20px;margin-bottom:20px;">
+          <div class="row g-2">
+            <div class="col-6"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Student Name</div><div style="font-size:15px;font-weight:600;">{{ payment.student.get_full_name }}</div></div>
+            <div class="col-6"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Enrollment</div><div style="font-size:15px;font-weight:600;">{{ payment.student.enrollment_number }}</div></div>
+            <div class="col-6"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Department</div><div style="font-size:14px;font-weight:500;">{{ payment.student.department.name }}</div></div>
+            <div class="col-6"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;">Semester</div><div style="font-size:14px;font-weight:500;">{{ payment.student.semester }}</div></div>
+          </div>
+        </div>
+        <div style="border-top:2px dashed rgba(0,0,0,0.1);padding-top:20px;display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-size:13px;color:var(--text-secondary);">Payment Method: <strong>{{ payment.get_payment_method_display }}</strong></div>
+            <div style="font-size:13px;color:var(--text-secondary);">Status: <strong style="color:#10b981;">{{ payment.get_status_display }}</strong></div>
+            {% if payment.remarks %}<div style="font-size:13px;color:var(--text-secondary);">Remarks: {{ payment.remarks }}</div>{% endif %}
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;color:var(--text-secondary);">Amount Paid</div>
+            <div style="font-size:36px;font-weight:900;color:#10b981;">₹{{ payment.amount_paid }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:16px;justify-content:center;">
+      <button onclick="window.print()" class="btn-primary-custom"><i class="bi bi-printer-fill"></i> Print Receipt</button>
+      <a href="{% url 'fee_dashboard' %}" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Back</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

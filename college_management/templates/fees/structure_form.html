@@ -1,0 +1,20 @@
+{% extends 'base.html' %}{% block title %}Add Fee Structure{% endblock %}{% block page_title %}Add Fee Structure{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-7">
+<div class="content-card"><div class="card-header-custom"><h5>Fee Structure</h5><a href="{% url 'fee_structure_list' %}" class="btn-outline-custom" style="padding:6px 14px;"><i class="bi bi-arrow-left"></i> Back</a></div>
+<div class="card-body-custom"><form method="POST">{% csrf_token %}
+<div class="row g-3">
+  <div class="col-md-8"><label class="form-label">Structure Name *</label>{{ form.name }}</div>
+  <div class="col-md-4"><label class="form-label">Academic Year</label>{{ form.academic_year }}</div>
+  <div class="col-md-6"><label class="form-label">Department *</label>{{ form.department }}</div>
+  <div class="col-md-6"><label class="form-label">Semester *</label>{{ form.semester }}</div>
+  <div class="col-md-3"><label class="form-label">Tuition Fee *</label>{{ form.tuition_fee }}</div>
+  <div class="col-md-3"><label class="form-label">Exam Fee</label>{{ form.exam_fee }}</div>
+  <div class="col-md-3"><label class="form-label">Library Fee</label>{{ form.library_fee }}</div>
+  <div class="col-md-3"><label class="form-label">Other Fee</label>{{ form.other_fee }}</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:12px;">
+  <button type="submit" class="btn-primary-custom"><i class="bi bi-check-circle-fill"></i> Save Structure</button>
+  <a href="{% url 'fee_structure_list' %}" class="btn-outline-custom"><i class="bi bi-x-circle"></i> Cancel</a>
+</div>
+</form></div></div>
+</div></div>{% endblock %}

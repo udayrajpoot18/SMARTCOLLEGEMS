@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}{{ notice.title }}{% endblock %}{% block page_title %}Notice Detail{% endblock %}
+{% block content %}<div class="row justify-content-center"><div class="col-lg-8">
+<div class="content-card">
+  <div style="background:var(--gradient-1);padding:32px;border-radius:var(--border-radius) var(--border-radius) 0 0;color:white;">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;">{{ notice.get_priority_display }}</span>
+      <span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;">{{ notice.get_target_display }}</span>
+    </div>
+    <h2 style="font-size:22px;font-weight:800;margin-bottom:8px;">{{ notice.title }}</h2>
+    <p style="opacity:0.8;font-size:13px;margin:0;">Posted by {{ notice.created_by.get_full_name }} &bull; {{ notice.created_at|date:"M d, Y H:i" }}</p>
+  </div>
+  <div class="card-body-custom">
+    <div style="font-size:15px;line-height:1.7;color:var(--text-primary);white-space:pre-line;">{{ notice.content }}</div>
+    {% if notice.attachment %}
+    <div style="margin-top:20px;padding:16px;background:rgba(99,102,241,0.06);border-radius:12px;">
+      <a href="{{ notice.attachment.url }}" download class="btn-outline-custom"><i class="bi bi-download"></i> Download Attachment</a>
+    </div>
+    {% endif %}
+    <div style="margin-top:20px;"><a href="{% url 'notice_list' %}" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Back to Notices</a></div>
+  </div>
+</div>
+</div></div>{% endblock %}

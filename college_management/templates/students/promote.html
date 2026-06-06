@@ -1,0 +1,28 @@
+{% extends 'base.html' %}{% block title %}Promote Students{% endblock %}{% block page_title %}Promote Students{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="content-card">
+      <div class="card-header-custom"><h5><i class="bi bi-arrow-up-circle-fill me-2" style="color:#6366f1;"></i>Promote Students</h5></div>
+      <div class="card-body-custom">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Department</label>
+            <select name="department" class="form-select" required>
+              {% for d in departments %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">From Semester (promote to next)</label>
+            <select name="from_semester" class="form-select" required>
+              {% for i in "1234567"|make_list %}<option value="{{ i }}">Semester {{ i }} → {{ i|add:"1" }}</option>{% endfor %}
+            </select>
+          </div>
+          <button type="submit" class="btn-primary-custom"><i class="bi bi-arrow-up-circle-fill"></i> Promote Students</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
